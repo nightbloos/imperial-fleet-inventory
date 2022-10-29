@@ -1,0 +1,91 @@
+syntax = "proto3";
+
+package spaceship;
+
+option go_package = "imperial-fleet-inventory/api/langs/go/spaceship";
+
+service SpaceshipService {
+    rpc CreateSpaceship (CreateSpaceshipRequest) returns (CreateSpaceshipResponse) {}
+    rpc GetSpaceships (GetSpaceshipsRequest) returns (GetSpaceshipsResponse) {}
+    rpc GetSpaceship (GetSpaceshipRequest) returns (GetSpaceshipResponse) {}
+    rpc UpdateSpaceship (UpdateSpaceshipRequest) returns (UpdateSpaceshipResponse) {}
+    rpc DeleteSpaceship (DeleteSpaceshipRequest) returns (DeleteSpaceshipResponse) {}
+}
+
+message CreateSpaceshipRequest {
+    message Armament {
+        string title = 1;
+        int64 quantity = 2;
+    }
+    string name = 1;
+    string class = 2;
+    int64 crew = 3;
+    string image_url = 4;
+    double value = 5;
+    string status = 6;
+    repeated Armament armament = 7;
+}
+
+message CreateSpaceshipResponse{
+    Spaceship spaceship = 1;
+}
+
+message GetSpaceshipsRequest {
+    string name = 1;
+    string class = 2;
+    string status = 3;
+}
+
+message GetSpaceshipsResponse {
+    repeated Spaceship spaceships = 1;
+}
+
+message GetSpaceshipRequest {
+    int64 id = 1;
+}
+
+message GetSpaceshipResponse {
+    Spaceship spaceship = 1;
+}
+
+message UpdateSpaceshipRequest {
+    message Armament {
+        string title = 1;
+        int64 quantity = 2;
+    }
+
+    int64 id = 1;
+    string name = 2;
+    string class = 3;
+    int64 crew = 4;
+    string image_url = 5;
+    double value = 6;
+    string status = 7;
+    repeated Armament armament = 8;
+}
+
+message UpdateSpaceshipResponse {
+    Spaceship spaceship = 1;
+}
+
+message DeleteSpaceshipRequest {
+    int64 id = 1;
+}
+
+message DeleteSpaceshipResponse {}
+
+message Spaceship {
+    message Armament {
+        string title = 1;
+        int64 quantity = 2;
+    }
+
+    int64 id = 1;
+    string name = 2;
+    string class = 3;
+    int64 crew = 4;
+    string image_url = 5;
+    double value = 6;
+    string status = 7;
+    repeated Armament armament = 8;
+}
