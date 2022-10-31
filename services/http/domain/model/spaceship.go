@@ -53,7 +53,7 @@ type DeleteSpaceshipResponse struct {
 }
 
 type Spaceship struct {
-	Id       int64               `json:"id"`
+	ID       int64               `json:"id"`
 	Name     string              `json:"name"`
 	Class    string              `json:"class"`
 	Crew     int64               `json:"crew"`

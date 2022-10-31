@@ -91,7 +91,7 @@ func ToProtoUpdateSpaceshipResponse(s model.Spaceship) *spaceshipProto.UpdateSpa
 
 func ToProtoSpaceship(s model.Spaceship) *spaceshipProto.Spaceship {
 	return &spaceshipProto.Spaceship{
-		Id:       s.Id,
+		Id:       s.ID,
 		Name:     s.Name,
 		Class:    s.Class,
 		Crew:     s.Crew,

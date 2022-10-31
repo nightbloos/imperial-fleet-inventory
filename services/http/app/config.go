@@ -8,8 +8,9 @@ import (
 )
 
 type Config struct {
-	Log  LogConfig  `env:"IFI_HTTP_LOG"`
-	HTTP HTTPConfig `env:"IFI_HTTP_SERVICE"`
+	Log              LogConfig              `env:"IFI_HTTP_LOG"`
+	HTTP             HTTPConfig             `env:"IFI_HTTP_SERVICE"`
+	SpaceshipService SpaceshipServiceConfig `env:"IFI_HTTP_SPACESHIP_SERVICE"`
 }
 
 type LogConfig struct {
@@ -19,6 +20,11 @@ type LogConfig struct {
 
 type HTTPConfig struct {
 	Port int `env:"PORT" default:"8080"`
+}
+
+type SpaceshipServiceConfig struct {
+	Host string `env:"HOST"`
+	Port int    `env:"PORT"`
 }
 
 func (a *Application) initConfig() error {
