@@ -3,9 +3,8 @@ package api
 import (
 	"context"
 
-	"github.com/pkg/errors"
-
 	spaceshipProto "imperial-fleet-inventory/api/langs/go/spaceship/grpc"
+	serviceConverter "imperial-fleet-inventory/common/sevice/converter"
 	"imperial-fleet-inventory/services/spaceship/api/converter"
 	"imperial-fleet-inventory/services/spaceship/domain/model"
 )
@@ -33,7 +32,7 @@ func (s *SpaceshipServer) CreateSpaceship(ctx context.Context, request *spaceshi
 
 	spaceship, err := s.spaceshipSrv.CreateSpaceship(ctx, req)
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to create spaceship")
+		return nil, serviceConverter.CreateGRPCErrorResponse(err)
 	}
 
 	return converter.ToProtoCreateSpaceshipResponse(spaceship), nil
@@ -44,7 +43,7 @@ func (s *SpaceshipServer) GetSpaceships(ctx context.Context, request *spaceshipP
 
 	spaceships, err := s.spaceshipSrv.FindAllSpaceships(ctx, req)
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to get spaceships")
+		return nil, serviceConverter.CreateGRPCErrorResponse(err)
 	}
 
 	return converter.ToProtoGetSpaceshipsResponse(spaceships), nil
@@ -55,7 +54,7 @@ func (s *SpaceshipServer) GetSpaceship(ctx context.Context, request *spaceshipPr
 
 	spaceship, err := s.spaceshipSrv.FindSpaceship(ctx, id)
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to get spaceship")
+		return nil, serviceConverter.CreateGRPCErrorResponse(err)
 	}
 
 	return converter.ToProtoGetSpaceshipResponse(spaceship), nil
@@ -67,7 +66,7 @@ func (s *SpaceshipServer) UpdateSpaceship(ctx context.Context, request *spaceshi
 
 	spaceship, err := s.spaceshipSrv.UpdateSpaceship(ctx, id, req)
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to update spaceship")
+		return nil, serviceConverter.CreateGRPCErrorResponse(err)
 	}
 
 	return converter.ToProtoUpdateSpaceshipResponse(spaceship), nil
@@ -75,6 +74,12 @@ func (s *SpaceshipServer) UpdateSpaceship(ctx context.Context, request *spaceshi
 }
 
 func (s *SpaceshipServer) DeleteSpaceship(ctx context.Context, request *spaceshipProto.DeleteSpaceshipRequest) (*spaceshipProto.DeleteSpaceshipResponse, error) {
-	// TODO implement me
-	panic("implement me")
+	id := request.GetId()
+
+	err := s.spaceshipSrv.DeleteSpaceship(ctx, id)
+	if err != nil {
+		return nil, serviceConverter.CreateGRPCErrorResponse(err)
+	}
+
+	return &spaceshipProto.DeleteSpaceshipResponse{}, nil
 }

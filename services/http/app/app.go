@@ -2,13 +2,17 @@ package app
 
 import (
 	"context"
+	"fmt"
 	"math/rand"
 	"time"
 
 	"go.uber.org/zap"
 	"golang.org/x/sync/errgroup"
+	"google.golang.org/grpc"
 
+	spaceshipProto "imperial-fleet-inventory/api/langs/go/spaceship/grpc"
 	"imperial-fleet-inventory/common/http"
+	grpcRequestMetadata "imperial-fleet-inventory/common/request_metadata/grpc"
 	"imperial-fleet-inventory/services/http/api"
 )
 
@@ -33,7 +37,11 @@ func (a *Application) Run(ctx context.Context) error {
 
 	ginRouter := a.initGinRouter()
 
-	spaceshipAPI := api.NewSpaceshipServer(a.logger)
+	spaceshipService, err := a.initSpaceshipClient(ctx)
+	if err != nil {
+		return err
+	}
+	spaceshipAPI := api.NewSpaceshipServer(spaceshipService, a.logger)
 	spaceshipAPI.Register(ginRouter)
 
 	errGrp, ctx := errgroup.WithContext(ctx)
@@ -43,4 +51,16 @@ func (a *Application) Run(ctx context.Context) error {
 	})
 
 	return errGrp.Wait()
+}
+
+func (a *Application) initSpaceshipClient(ctx context.Context) (spaceshipProto.SpaceshipServiceClient, error) {
+	conn, err := grpc.DialContext(
+		ctx,
+		fmt.Sprintf("%s:%d", a.config.SpaceshipService.Host, a.config.SpaceshipService.Port),
+		grpc.WithInsecure(),
+		grpc.WithUnaryInterceptor(grpcRequestMetadata.NewClientInterceptor()))
+	if err != nil {
+		return nil, err
+	}
+	return spaceshipProto.NewSpaceshipServiceClient(conn), err
 }

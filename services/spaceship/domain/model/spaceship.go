@@ -1,14 +1,14 @@
 package model
 
 type Spaceship struct {
-	Id       int64               `gorm:"column:id;primaryKey"`
+	ID       int64               `gorm:"column:id;primaryKey"`
 	Name     string              `gorm:"column:name"`
 	Class    string              `gorm:"column:class"`
 	Crew     int64               `gorm:"column:crew"`
 	Image    string              `gorm:"column:image"`
 	Value    float64             `gorm:"column:value"`
 	Status   string              `gorm:"column:status"`
-	Armament []SpaceshipArmament `gorm:"foreignKey:SpaceshipId"`
+	Armament []SpaceshipArmament `gorm:"foreignKey:spaceship_id"`
 }
 
 func (Spaceship) TableName() string {
@@ -16,7 +16,7 @@ func (Spaceship) TableName() string {
 }
 
 type SpaceshipArmament struct {
-	Id          int64  `gorm:"column:id;primaryKey"`
+	ID          int64  `gorm:"column:id;primaryKey"`
 	SpaceshipId int64  `gorm:"column:spaceship_id"`
 	Title       string `gorm:"column:title"`
 	Quantity    int64  `gorm:"column:quantity"`

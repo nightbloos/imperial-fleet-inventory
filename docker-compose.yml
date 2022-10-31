@@ -1,0 +1,26 @@
+version: '3.1'
+
+services:
+  spaceship:
+    build:
+      context: .
+      dockerfile: services/spaceship/Dockerfile
+    env_file:
+      - services/spaceship/.env
+    depends_on:
+      - mysql
+  http:
+    build:
+      context: .
+      dockerfile: services/http/Dockerfile
+    env_file:
+      - services/http/.env
+    ports:
+      - "8080:8080"
+  mysql:
+    image: mysql:5.7
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    hostname: mysql
+    ports:
+      - "3306:3306"
